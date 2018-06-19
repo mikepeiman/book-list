@@ -1,0 +1,20 @@
+.success, .error {
+  color: white;
+  padding: 5px;
+  margin: 5px 0 15px 0;
+}
+
+.success {
+  background: green;
+}
+.error {
+  background: red;
+}
+.hidden {
+  visibility: hidden;
+  opacity: 0;
+  height: 0px;
+  padding: 0;
+  margin: 0;
+  transition: all 0.5s;
+}
