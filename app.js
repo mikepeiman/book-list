@@ -8,6 +8,8 @@ function Book(title, author, isbn) {
 
 // UI constructor - a set of prototype methods to do CRUD events
 function UI() {}
+
+// add the 'add book' method to our UI object
 UI.prototype.addBookToList = function(book) {
   const list = document.getElementById('book-list')
 
@@ -49,7 +51,13 @@ UI.prototype.showAlert = function(message, className) {
     }, 505)
     document.querySelector('.alert').classList = 'alert hidden'
   }, 3000)
-  
+}
+// delete book
+
+UI.prototype.deleteBook = function(target) {
+  if(target.className === 'delete') {
+    target.parentElement.parentElement.remove()
+  }
 }
 
 // clear fields
@@ -62,7 +70,8 @@ UI.prototype.clearFields = function() {
 }
 
 
-// Event listeners
+// Event listener for add book
+
 document.getElementById('book-form').addEventListener('submit', 
 function(e) {
   // console.log('test event listener')
@@ -92,7 +101,18 @@ function(e) {
     ui.clearFields()
 
   }
-
-
+  console.log(ui)
   e.preventDefault()
 })
+
+// event listener for delete
+
+document.getElementById('book-list').addEventListener('click', function(e) {
+  const ui = new UI()
+  ui.deleteBook(e.target)
+  console.log(e.target)
+  ui.showAlert('Book removed', 'success')
+  e.preventDefault()
+  
+})
+
