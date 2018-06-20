@@ -8,7 +8,7 @@ class Book {
 }
 
 class UI {
-  addBookToList(book) {
+  static addBookToList(book) {
     const list = document.getElementById('book-list')
 
     // create tr element
@@ -26,7 +26,7 @@ class UI {
     list.appendChild(row)
   }
 
-  showAlert(message, className) {
+  static showAlert(message, className) {
     // create a div
     const div = document.createElement('div')
     // add classname
@@ -51,13 +51,13 @@ class UI {
     }, 3000)
   }
 
-  deleteBook(target) {
+  static deleteBook(target) {
     if(target.className === 'delete') {
       target.parentElement.parentElement.remove()
     }
   }
 
-  clearFields() {
+  static clearFields() {
     document.getElementById('title').value = ''
     document.getElementById('author').value = ''
     document.getElementById('isbn').value = ''
@@ -80,10 +80,9 @@ class Store {
 
   static displayBooks() {
     const books = Store.getBooks()
-    const ui = new UI()
     books.forEach(book => {
       console.log(book)
-      ui.addBookToList(book)
+      UI.addBookToList(book)
     });
   }
 
@@ -105,7 +104,7 @@ class Store {
     localStorage.setItem('books', JSON.stringify(books))
 
     // some of my attempts at a solution before watching video
-    
+
     // var exists = Object.keys(books).some(function(k) {
     //   console.log(books[k].value === isbn)
     //   localStorage.removeItem(books[k])
@@ -143,21 +142,17 @@ function(e) {
 
   let book = new Book(title, author, isbn)
 
-  // instantiate UI
-
-  const ui = new UI()
-  console.log(ui)
   if(title === '' || author === '' || isbn === ""){
     // error alert
-    ui.showAlert('Please fill in all fields', 'error')
+    UI.showAlert('Please fill in all fields', 'error')
   } else {
     // Add book to list
-    ui.addBookToList(book)
+    UI.addBookToList(book)
     // add to localstorage
     Store.addBook(book)
     // show success
-    ui.showAlert('Book added!', 'success')
-    ui.clearFields()
+    UI.showAlert('Book added!', 'success')
+    UI.clearFields()
 
   }
 
@@ -167,16 +162,15 @@ function(e) {
 // event listener for delete
 
 document.getElementById('book-list').addEventListener('click', function(e) {
-  const ui = new UI()
-  
+
   console.log(e.target)
-  ui.deleteBook(e.target)
+  UI.deleteBook(e.target)
 
   // remove from local storage
   Store.removeBook(e.target.parentElement.previousElementSibling.textContent)
 
 
-  ui.showAlert('Book removed', 'success')
+  UI.showAlert('Book removed', 'success')
   e.preventDefault()
   
 })
