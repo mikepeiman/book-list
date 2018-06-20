@@ -1,3 +1,4 @@
+
 class Book {
   constructor(title, author, isbn) {
     this.title = title
@@ -64,6 +65,68 @@ class UI {
   }
 }
 
+// implement local storage class
+
+class Store {
+  static getBooks() {
+    let books
+    if(localStorage.getItem('books') === null) {
+      books = []
+    } else {
+      books = JSON.parse(localStorage.getItem('books'))
+    }
+    return books
+  }
+
+  static displayBooks() {
+    const books = Store.getBooks()
+    const ui = new UI()
+    books.forEach(book => {
+      console.log(book)
+      ui.addBookToList(book)
+    });
+  }
+
+  static addBook(book) {
+    const books = Store.getBooks()
+    books.push(book)
+
+    localStorage.setItem('books', JSON.stringify(books))
+  }
+
+  static removeBook(isbn) {
+    console.log(isbn)
+    const books = Store.getBooks()
+    books.forEach(function(book, index) {
+      if(book.isbn === isbn) {
+        books.splice(index, 1)
+      }
+    })
+    localStorage.setItem('books', JSON.stringify(books))
+
+    // some of my attempts at a solution before watching video
+    
+    // var exists = Object.keys(books).some(function(k) {
+    //   console.log(books[k].value === isbn)
+    //   localStorage.removeItem(books[k])
+    // })
+    // console.log(exists)
+
+    // Object.keys(books).forEach(function(key) {
+    //   if (books[key] === isbn)
+    //   alert(books[key])
+    // })
+
+  //   books.forEach(book => {
+  //     if(book.includes(isbn)) {
+  //       localStorage.removeItem(book)
+  //     }
+  //   })
+  }
+}
+
+// DOM load event
+document.addEventListener('DOMContentLoaded', Store.displayBooks)
 
 // Event listener for add book
 
@@ -89,8 +152,9 @@ function(e) {
     ui.showAlert('Please fill in all fields', 'error')
   } else {
     // Add book to list
-
     ui.addBookToList(book)
+    // add to localstorage
+    Store.addBook(book)
     // show success
     ui.showAlert('Book added!', 'success')
     ui.clearFields()
@@ -104,8 +168,14 @@ function(e) {
 
 document.getElementById('book-list').addEventListener('click', function(e) {
   const ui = new UI()
-  ui.deleteBook(e.target)
+  
   console.log(e.target)
+  ui.deleteBook(e.target)
+
+  // remove from local storage
+  Store.removeBook(e.target.parentElement.previousElementSibling.textContent)
+
+
   ui.showAlert('Book removed', 'success')
   e.preventDefault()
   
